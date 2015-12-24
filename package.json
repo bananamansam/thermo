@@ -1,0 +1,25 @@
+{
+  "name": "therm",
+  "version": "1.0.0",
+  "description": "nodejs server that logs data to cassandra for thermocouple readings",
+  "main": "app.js",
+  "dependencies": {
+    "cassandra-driver": "^3.0.0",
+    "http": "^0.0.0",
+    "fs": "^0.0.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bananamansam/thermo.git"
+  },
+  "author": "Sam Trost",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bananamansam/thermo/issues"
+  },
+  "homepage": "https://github.com/bananamansam/thermo#readme"
+}
