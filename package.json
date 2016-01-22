@@ -1,10 +1,9 @@
 {
   "name": "therm",
   "version": "1.0.0",
-  "description": "nodejs server that logs data to cassandra for thermocouple readings",
+  "description": "nodejs server that logs data for thermocouple readings",
   "main": "app.js",
   "dependencies": {
-    "cassandra-driver": "^3.0.0",
     "http": "^0.0.0",
     "fs": "^0.0.2"
   },

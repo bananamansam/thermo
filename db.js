@@ -1,39 +1,33 @@
-var cassandra = require('cassandra-driver'),
-    async = require('async'),
-    clientSettings = {contactPoints: ['127.0.0.1'], keyspace: 'hr'},
-    client = new cassandra.Client(clientSettings);
-    
-module.exports = { 
-   thermoCouple: {
-      select: function(count){
-         async.series([
-            function connect(next){
-                     client.connect(next);
-                  },
-                  function select(next){
-                  }
-         ], function(err){ if(err){
-            console.error('There was an error inserting a reading.', err.message, err.stack);
-            }});
-         client.shutdown();
+var sql = require('sqlite3'),
+    db = new sql.Database('./thermo.db'),   
+    thermoCouple = {
+      createTable: function() {
+         db.serialize(function() {
+            db.run("CREATE TABLE if not exists thermo_readings (capture_date INTEGER, thermo_value real)");
+         });
       },
-      insert: function(dateGroup, value){
-         async.series([          
-            function connect(next){
-               client.connect(next);
-            },
-            function insert(next){
-               var query = 'INSERT INTO hr.thermo_readings '+
-                  '(reading_date, reading_time, thermo_value) '+
-                  'values (?, now(), ?)';
-               client.execute(query, [dateGroup, value], { prepare: true }, next()) 
+      get: function(callback, limit, captureDate) {
+         db.all("SELECT capture_date, thermo_value FROM thermo_readings", 
+            function(err, rows){
+              if (err){
+                console.log(err);             
+              }
+            
+              return callback(rows);
             }
-         ], function (err) { 
-            if(err){
-               console.error('There was an error inserting a reading.', err.message, err.stack);
-            }                        
+         );         
+      },
+      insert: function(dateGroup, value) {
+         var statement = db.prepare("INSERT INTO thermo_readings (capture_date, thermo_value) values (?,?)");
+         statement.run(dateGroup, value);
+         statement.finalize();
+         db.each("SELECT capture_date, thermo_value FROM thermo_readings", function(err, row) {
+           console.log(row.capture_date + ": " + row.thermo_value);
          });
       }
-   }   
+   };
+
+module.exports = { 
+   thermoCouple: thermoCouple
 };
 
