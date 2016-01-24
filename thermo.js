@@ -6,13 +6,6 @@ var db = require('./db'),
    _maxRecords = 100,
    intervalId;
 
-function getDatePartition() {
-   var now = new Date();
-   return now.getUTCFullYear() + '-' +
-      now.getUTCMonth() + '-' +
-      now.getUTCDate();
-}
-
 function readTemp_raw() {
    var i, raw_data, degreesC;
 
@@ -36,7 +29,7 @@ function readTemp_raw() {
 function _poll() {
    var read = readTemp_raw(_file);
    if (read) {
-      db.thermoCouple.insert(getDatePartition(), read);
+      db.thermoCouple.insert(new Date(), read);
    }
 }
 
