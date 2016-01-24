@@ -1,6 +1,7 @@
 var express = require("express"),
     settings = require('./settings'),
     util = require('./utilities'),
+    thermo = require('./thermo'),
     db = require('./db'),
     app = express(),
     bodyParser = require('body-parser');
@@ -26,37 +27,48 @@ app.map = function(a, route){
 };
 
 app.map({
-   '/api/thermoReadings': {
-      get: function(req,res){
-         db.thermoCouple.get(function(data) { 
-            var results = [];
-            for(var n = 0; n < data.length; n++){
-              var reading = { 
-                  capture_date: new Date(data[n].capture_date).toString(),
-                  thermo_value: data[n].thermo_value
-                };
+  '/api/thermoCouple': {
+    get: function(req,res){
+      // res.json({ reading: thermo.currentTemperature() });
+      res.json({ reading: 100 });
+    }
+  },
+  '/api/thermoReadings': {
+    get: function(req,res){
+       db.thermoCouple.get(function(data) { 
+          var results = [];
+          for(var n = 0; n < data.length; n++){
+            var reading = { 
+                capture_date: new Date(data[n].capture_date).toString(),
+                thermo_value: data[n].thermo_value
+              };
 
-              results.push(reading);
-            }
-            res.json(results);
-         });
-      },
-      '/:filter': {
-         get: function(req, res){
-            res.json({ filter: req.body.filter});            
-         },
-      },
-      post: function(req,res){
-         console.log(req.body);
-         db.thermoCouple.insert(req.body.capture_date, req.body.thermo_value);
-         res.status(200);
-      }
-   },
-   '/thermo.html': {
-      get: function (req, res){
-         res.sendFile('index.html', { root: __dirname });
-      }
-   }
+            results.push(reading);
+          }
+          res.json(results);
+       });
+    },
+    '/:filter': {
+       get: function(req, res){
+          res.json({ filter: req.body.filter});            
+       },
+    },
+    post: function(req,res){
+       console.log(req.body);
+       db.thermoCouple.insert(req.body.capture_date, req.body.thermo_value);
+       res.status(200);
+    }
+  },
+  '/thermo.html': {
+    get: function (req, res){
+       res.sendFile('index.html', { root: __dirname });
+    }
+  },
+  '': {
+    get: function (req, res){
+      res.sendFile('index.html', { root: __dirname });
+    }
+  }
 });
 
 

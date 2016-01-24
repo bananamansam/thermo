@@ -3,7 +3,7 @@ var ThermoReadings = React.createClass({
     return {data: []};
   },
   loadThermoReadingsFromServer: function(filter) {
-    $.get(this.props.url, { filter: filter })
+    $.get(this.props.readingsUrl, { filter: filter })
        .success(function(data){
          this.setState({data: data});
        }.bind(this))
@@ -19,7 +19,7 @@ var ThermoReadings = React.createClass({
     reading.capture_date = Date.now();
      
     $.ajax({
-      url: this.props.url,
+      url: this.props.readingsUrl,
       dataType: 'json',
       type: 'POST',
       data: reading,
@@ -67,7 +67,7 @@ var ThermoReadings = React.createClass({
               </div>
            </div>
            <div className="col-sm-3">
-             <ManualReadingForm onFormSubmit={this.handleThermoReadingSubmit} />
+             <ManualReadingForm onFormSubmit={this.handleThermoReadingSubmit} thermoUrl={this.props.thermoUrl} />
            </div>
         </div>
         <div className="row">
@@ -82,7 +82,7 @@ var ThermoReadings = React.createClass({
 
 var ManualReadingForm = React.createClass({
    getInitialState: function() {
-      return {reading: ''};
+      return {thermoValue: ''};
    },
    handleReadingChange: function(e) {
       this.setState({thermoValue: e.target.value});
@@ -99,13 +99,14 @@ var ManualReadingForm = React.createClass({
       this.setState(this.getInitialState());
    },
    onRefresh: function(e){
+      var that = this;
       e.preventDefault();
       
-      $.get(this.props.url)
+      $.get(this.props.thermoUrl)
       .success(function(data){
-         this.setState({reading: data})})
+         that.setState({thermoValue: data.reading})})
       .error(function(data){
-         console.error(this.props.url, status, err.toString());
+         console.error(that.props.url, status, err.toString());
       });
    },
    render: function() {
@@ -141,11 +142,6 @@ var ManualReadingForm = React.createClass({
             </div>
          </div>
       );
-   }
-});
-
-var ReadingChart = React.createClass({
-   render: function (){
    }
 });
 
@@ -190,6 +186,6 @@ var Reading = React.createClass({
 });
 
 ReactDOM.render(
-  <ThermoReadings url="/api/thermoReadings" pollInterval="10000" />,
+  <ThermoReadings readingsUrl="/api/thermoReadings" thermoUrl="/api/thermoCouple" pollInterval="10000" />,
   document.getElementById('content')
 );

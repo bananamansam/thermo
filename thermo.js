@@ -27,13 +27,16 @@ function readTemp_raw() {
 }
    
 function _poll() {
-   var read = readTemp_raw(_file);
+   var read = readTemp_raw();
    if (read) {
       db.thermoCouple.insert(new Date().valueOf(), read);
    }
 }
 
 module.exports = {
+   currentTemperature: function(){
+      return readTemp_raw();
+   },
    pollThermocouple: function (file, interval) {
       utilities.log('creating schema...');
       db.thermoCouple.createTable();
