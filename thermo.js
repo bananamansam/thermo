@@ -29,7 +29,7 @@ function readTemp_raw() {
 function _poll() {
    var read = readTemp_raw(_file);
    if (read) {
-      db.thermoCouple.insert(new Date(), read);
+      db.thermoCouple.insert(new Date().valueOf(), read);
    }
 }
 
