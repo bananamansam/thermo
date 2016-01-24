@@ -29,8 +29,7 @@ app.map = function(a, route){
 app.map({
   '/api/thermoCouple': {
     get: function(req,res){
-      // res.json({ reading: thermo.currentTemperature() });
-      res.json({ reading: 100 });
+      res.json({ reading: thermo.currentTemperature() });
     }
   },
   '/api/thermoReadings': {
