@@ -31,10 +31,12 @@ app.map({
          db.thermoCouple.get(function(data) { 
             var results = [];
             for(var n = 0; n < data.length; n++){
-               results.push({ 
-                 capture_date: new Date(data[n].capture_date).toString(),
-                 thermo_value: data[n].thermo_value
-               });
+              var reading = { 
+                  capture_date: new Date(data[n].capture_date).toString(),
+                  thermo_value: data[n].thermo_value
+                };
+
+              results.push(reading);
             }
             res.json(results);
          });

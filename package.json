@@ -4,8 +4,10 @@
   "description": "nodejs server that logs data for thermocouple readings",
   "main": "app.js",
   "dependencies": {
+    "dblite": "^0.7.6",
+    "fs": "^0.0.2",
     "http": "^0.0.0",
-    "fs": "^0.0.2"
+    "sqlite": "0.0.4"
   },
   "devDependencies": {},
   "scripts": {
